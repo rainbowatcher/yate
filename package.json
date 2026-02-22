@@ -15,6 +15,7 @@
     "onCommand:code-translator.translate",
     "onCommand:code-translator.translateComments",
     "onCommand:code-translator.translateMarkdown",
+    "onCommand:code-translator.translateFile",
     "onLanguage:javascript",
     "onLanguage:typescript",
     "onLanguage:python",
@@ -38,6 +39,10 @@
       {
         "command": "code-translator.translateMarkdown",
         "title": "Code Translator: Translate Markdown"
+      },
+      {
+        "command": "code-translator.translateFile",
+        "title": "Code Translator: Translate Entire File"
       }
     ],
     "configuration": {
