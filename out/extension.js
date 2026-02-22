@@ -1,0 +1,218 @@
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deactivate = exports.activate = void 0;
+const vscode = __importStar(require("vscode"));
+const translate_1 = require("./translator/translate");
+// Store the translation panel
+let translationPanel;
+// Language name mapping
+const languageNames = {
+    en: 'English',
+    'zh-CN': 'Chinese (Simplified)',
+    'zh-TW': 'Chinese (Traditional)',
+    ja: 'Japanese',
+    ko: 'Korean',
+    es: 'Spanish',
+    fr: 'French',
+    de: 'German',
+    ru: 'Russian',
+    pt: 'Portuguese',
+    it: 'Italian'
+};
+function activate(context) {
+    // Register translate selection command - shows translation in side panel
+    const translateCommand = vscode.commands.registerCommand('code-translator.translate', async () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            vscode.window.showInformationMessage('No active editor');
+            return;
+        }
+        const selection = editor.selection;
+        const text = editor.document.getText(selection);
+        if (!text) {
+            vscode.window.showInformationMessage('No text selected');
+            return;
+        }
+        await performTranslation(text, 'Selection');
+    });
+    // Register translate entire file command
+    const translateFileCommand = vscode.commands.registerCommand('code-translator.translateFile', async () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            vscode.window.showInformationMessage('No active editor');
+            return;
+        }
+        const document = editor.document;
+        const text = document.getText();
+        await performTranslation(text, 'File');
+    });
+    context.subscriptions.push(translateCommand);
+    context.subscriptions.push(translateFileCommand);
+}
+exports.activate = activate;
+async function performTranslation(text, mode) {
+    const targetLanguage = vscode.workspace
+        .getConfiguration('code-translator')
+        .get('targetLanguage') || 'en';
+    const sourceLanguage = vscode.workspace
+        .getConfiguration('code-translator')
+        .get('sourceLanguage') || 'auto';
+    // Show loading message
+    vscode.window.showInformationMessage('Translating...');
+    try {
+        const translated = await (0, translate_1.translateText)(text, sourceLanguage, targetLanguage);
+        const targetLangName = languageNames[targetLanguage] || targetLanguage;
+        // Create or show the side panel
+        if (!translationPanel) {
+            translationPanel = vscode.window.createWebviewPanel('codeTranslator', `Translation (${targetLangName})`, {
+                viewColumn: vscode.ViewColumn.Two,
+                preserveFocus: true
+            }, {
+                enableScripts: true,
+                retainContextWhenHidden: true
+            });
+            // Handle panel close
+            translationPanel.onDidDispose(() => {
+                translationPanel = undefined;
+            });
+        }
+        else {
+            // Update panel title
+            translationPanel.title = `Translation (${targetLangName})`;
+            translationPanel.reveal();
+        }
+        // Generate HTML content
+        const html = generateHtml(translated, targetLanguage);
+        translationPanel.webview.html = html;
+        vscode.window.showInformationMessage(`Translation complete: ${mode} → ${targetLangName}`);
+    }
+    catch (error) {
+        vscode.window.showErrorMessage(`Translation failed: ${error}`);
+    }
+}
+function generateHtml(translated, targetLanguage) {
+    // Escape HTML
+    let escapedContent = translated
+        .replace(/&/g, '&')
+        .replace(/</g, '<')
+        .replace(/>/g, '>');
+    // Basic markdown-like rendering
+    let contentHtml = escapedContent
+        // Headers
+        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+        // Bold
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        // Italic
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        // Code blocks
+        .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+        // Inline code
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        // Links
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+        // Lists
+        .replace(/^\s*[-*]\s+(.*)$/gm, '<li>$1</li>')
+        .replace(/^\s*\d+\.\s+(.*)$/gm, '<li>$1</li>')
+        // Line breaks
+        .replace(/\n/g, '<br>');
+    return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      padding: 16px;
+      line-height: 1.6;
+      color: var(--vscode-editor-foreground, #cccccc);
+      background-color: var(--vscode-editor-background, #1e1e1e);
+    }
+    h1, h2, h3 {
+      color: var(--vscode-editorHeader-foreground, #ffffff);
+      border-bottom: 1px solid var(--vscode-editorLineHighlightBorder, #333);
+      padding-bottom: 8px;
+    }
+    pre, code {
+      background-color: var(--vscode-editorInlayHint-background, #2d2d2d);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Fira Code', Consolas, monospace;
+    }
+    pre {
+      padding: 12px;
+      overflow-x: auto;
+    }
+    li {
+      margin-left: 20px;
+    }
+    a {
+      color: var(--vscode-textLink-foreground, #4fc3f7);
+    }
+    .copy-btn {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background-color: var(--vscode-button-background, #0e639c);
+      color: var(--vscode-button-foreground, #ffffff);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .copy-btn:hover {
+      background-color: var(--vscode-button-hoverBackground, #1177bb);
+    }
+    .translation-content {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+  <button class="copy-btn" onclick="copyTranslation()">Copy Translation</button>
+  <div class="translation-content">${contentHtml}</div>
+  <script>
+    function copyTranslation() {
+      const text = document.querySelector('.translation-content').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => {
+          btn.textContent = 'Copy Translation';
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>`;
+}
+function deactivate() { }
+exports.deactivate = deactivate;
+//# sourceMappingURL=extension.js.map
