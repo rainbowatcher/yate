@@ -20,7 +20,7 @@ const languageNames: Record<string, string> = {
 }
 
 export function activate(context: vscode.ExtensionContext) {
-  // Register translate command - shows translation in side panel
+  // Register translate selection command - shows translation in side panel
   const translateCommand = vscode.commands.registerCommand(
     'code-translator.translate',
     async () => {
@@ -42,41 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
   )
 
-  // Register translate all comments command
-  const translateCommentsCommand = vscode.commands.registerCommand(
-    'code-translator.translateComments',
-    async () => {
-      const editor = vscode.window.activeTextEditor
-      if (!editor) {
-        vscode.window.showInformationMessage('No active editor')
-        return
-      }
-
-      const document = editor.document
-      const text = document.getText()
-
-      await performTranslation(text, 'All Comments')
-    }
-  )
-
-  // Register translate markdown command
-  const translateMarkdownCommand = vscode.commands.registerCommand(
-    'code-translator.translateMarkdown',
-    async () => {
-      const editor = vscode.window.activeTextEditor
-      if (!editor) {
-        vscode.window.showInformationMessage('No active editor')
-        return
-      }
-
-      const document = editor.document
-      const text = document.getText()
-
-      await performTranslation(text, 'Markdown', true)
-    }
-  )
-
-  // Register translate file command
+  // Register translate entire file command
   const translateFileCommand = vscode.commands.registerCommand(
     'code-translator.translateFile',
     async () => {
@@ -94,16 +60,10 @@ export function activate(context: vscode.ExtensionContext) {
   )
 
   context.subscriptions.push(translateCommand)
-  context.subscriptions.push(translateCommentsCommand)
-  context.subscriptions.push(translateMarkdownCommand)
   context.subscriptions.push(translateFileCommand)
 }
 
-async function performTranslation(
-  text: string,
-  mode: string,
-  isMarkdown = false
-) {
+async function performTranslation(text: string, mode: string) {
   const targetLanguage = vscode.workspace
     .getConfiguration('code-translator')
     .get<string>('targetLanguage') || 'en'
@@ -145,7 +105,7 @@ async function performTranslation(
     }
 
     // Generate HTML content
-    const html = generateHtml(translated, targetLanguage, isMarkdown)
+    const html = generateHtml(translated, targetLanguage)
     translationPanel.webview.html = html
 
     vscode.window.showInformationMessage(
@@ -156,43 +116,34 @@ async function performTranslation(
   }
 }
 
-function generateHtml(
-  translated: string,
-  targetLanguage: string,
-  isMarkdown: boolean
-): string {
+function generateHtml(translated: string, targetLanguage: string): string {
   // Escape HTML
   let escapedContent = translated
     .replace(/&/g, '&')
     .replace(/</g, '<')
     .replace(/>/g, '>')
 
-  // If markdown, try to render it with some basic styling
+  // Basic markdown-like rendering
   let contentHtml = escapedContent
-
-  if (isMarkdown) {
-    // Basic markdown-like rendering
-    contentHtml = escapedContent
-      // Headers
-      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-      .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-      // Bold
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      // Italic
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      // Code blocks
-      .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
-      // Inline code
-      .replace(/`([^`]+)`/g, '<code>$1</code>')
-      // Links
-      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
-      // Lists
-      .replace(/^\s*[-*]\s+(.*)$/gm, '<li>$1</li>')
-      .replace(/^\s*\d+\.\s+(.*)$/gm, '<li>$1</li>')
-      // Line breaks
-      .replace(/\n/g, '<br>')
-  }
+    // Headers
+    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+    // Bold
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    // Italic
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    // Code blocks
+    .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+    // Inline code
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    // Links
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+    // Lists
+    .replace(/^\s*[-*]\s+(.*)$/gm, '<li>$1</li>')
+    .replace(/^\s*\d+\.\s+(.*)$/gm, '<li>$1</li>')
+    // Line breaks
+    .replace(/\n/g, '<br>')
 
   return `<!DOCTYPE html>
 <html>

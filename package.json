@@ -13,17 +13,7 @@
   ],
   "activationEvents": [
     "onCommand:code-translator.translate",
-    "onCommand:code-translator.translateComments",
-    "onCommand:code-translator.translateMarkdown",
-    "onCommand:code-translator.translateFile",
-    "onLanguage:javascript",
-    "onLanguage:typescript",
-    "onLanguage:python",
-    "onLanguage:java",
-    "onLanguage:cpp",
-    "onLanguage:go",
-    "onLanguage:rust",
-    "onLanguage:markdown"
+    "onCommand:code-translator.translateFile"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -31,14 +21,6 @@
       {
         "command": "code-translator.translate",
         "title": "Code Translator: Translate Selection"
-      },
-      {
-        "command": "code-translator.translateComments",
-        "title": "Code Translator: Translate All Comments"
-      },
-      {
-        "command": "code-translator.translateMarkdown",
-        "title": "Code Translator: Translate Markdown"
       },
       {
         "command": "code-translator.translateFile",
