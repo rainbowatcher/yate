@@ -67,11 +67,8 @@
     "compile": "tsc -p ./tsconfig.extension.json",
     "watch": "tsc -watch -p ./tsconfig.extension.json",
     "dev": "node scripts/dev.js",
-    "lint": "eslint .",
-    "test": "vitest",
-    "test:e2e": "cypress open",
-    "test:unit": "vitest",
-    "typecheck": "vue-tsc --noEmit"
+    "lint": "eslint src/extension/**/*.ts",
+    "lint:fix": "eslint src/extension/**/*.ts --fix"
   },
   "dependencies": {
     "vscode": "^1.75.0"
