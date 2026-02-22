@@ -1,58 +1,51 @@
-import * as vscode from 'vscode';
-
 /**
  * Translation service module
  * Uses free translation API (LibreTranslate or similar)
  */
 
 interface TranslationResult {
-    translatedText: string;
+  translatedText: string
 }
 
 /**
  * Translate text using free translation API
  */
 export async function translateText(
-    text: string,
-    sourceLang: string,
-    targetLang: string
+  text: string,
+  sourceLang: string,
+  targetLang: string,
 ): Promise<string> {
-    // Configuration
-    const apiKey = vscode.workspace.getConfiguration('code-translator')
-        .get<string>('apiKey') || '';
-    
-    // Use MyMemory Translation API (free)
-    // Alternative: LibreTranslate, Google Translate API (paid)
-    const apiUrl = 'https://api.mymemory.translated.net/get';
-    
-    const params = new URLSearchParams({
-        q: text,
-        langpair: `${sourceLang === 'auto' ? '' : sourceLang}|${targetLang}`
-    });
+  // Use MyMemory Translation API (free)
+  // Alternative: LibreTranslate, Google Translate API (paid)
+  const apiUrl = 'https://api.mymemory.translated.net/get'
 
-    try {
-        const response = await fetch(`${apiUrl}?${params}`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
-        });
+  const params = new URLSearchParams({
+    q: text,
+    langpair: `${sourceLang === 'auto' ? '' : sourceLang}|${targetLang}`,
+  })
 
-        if (!response.ok) {
-            throw new Error(`API request failed: ${response.status}`);
-        }
+  try {
+    const response = await fetch(`${apiUrl}?${params}`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+    })
 
-        const data = await response.json() as { responseData: TranslationResult; responseStatus: number };
+    if (!response.ok)
+      throw new Error(`API request failed: ${response.status}`)
 
-        if (data.responseStatus !== 200) {
-            throw new Error(`Translation failed: ${data.responseData?.translatedText || 'Unknown error'}`);
-        }
+    const data = await response.json() as { responseData: TranslationResult; responseStatus: number }
 
-        return data.responseData.translatedText;
-    } catch (error) {
-        if (error instanceof Error) {
-            throw new Error(`Translation error: ${error.message}`);
-        }
-        throw new Error('Unknown translation error');
-    }
+    if (data.responseStatus !== 200)
+      throw new Error(`Translation failed: ${data.responseData?.translatedText || 'Unknown error'}`)
+
+    return data.responseData.translatedText
+  }
+  catch (error) {
+    if (error instanceof Error)
+      throw new Error(`Translation error: ${error.message}`)
+
+    throw new Error('Unknown translation error')
+  }
 }
