@@ -1,4 +1,4 @@
-# README.zh-CN.md 翻译更正计划
+# yate README.zh-CN.md 翻译更正计划
 
 ## 问题描述
 
