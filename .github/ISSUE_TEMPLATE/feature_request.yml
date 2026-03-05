@@ -55,12 +55,12 @@ body:
   - type: textarea
     id: agent-context
     attributes:
-      label: Agent 执行信息（如适用）
-      description: 若由 Agent 创建，请填写分析上下文、约束条件与自检结果
+      label: Agent 执行信息
+      description: 请填写分析上下文、约束条件与自检结果；若非 Agent 创建请填写“非 Agent / N/A”
       placeholder: |
         - 分析上下文:
         - 约束条件:
-        - 自检结果:
+        - 自检结果（非 Agent 可填 N/A）:
     validations:
       required: true
 
