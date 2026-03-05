@@ -26,6 +26,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.activate = void 0;
 const vscode = __importStar(require("vscode"));
 const translate_1 = require("./translator/translate");
+const comments_1 = require("./translator/comments");
+const markdown_1 = require("./translator/markdown");
 // Store the translation panel
 let translationPanel;
 // Language name mapping
@@ -69,8 +71,59 @@ function activate(context) {
         const text = document.getText();
         await performTranslation(text, 'File');
     });
+    // Register translate comments in file command
+    const translateCommentsCommand = vscode.commands.registerCommand('code-translator.translateComments', async () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            vscode.window.showInformationMessage('No active editor');
+            return;
+        }
+        const languageId = editor.document.languageId;
+        const targetLanguage = vscode.workspace
+            .getConfiguration('code-translator')
+            .get('targetLanguage') || 'en';
+        const sourceLanguage = vscode.workspace
+            .getConfiguration('code-translator')
+            .get('sourceLanguage') || 'auto';
+        vscode.window.showInformationMessage('Translating comments...');
+        try {
+            await (0, comments_1.translateComments)(editor, languageId, sourceLanguage, targetLanguage);
+            vscode.window.showInformationMessage('Comments translated successfully');
+        }
+        catch (error) {
+            vscode.window.showErrorMessage(`Failed to translate comments: ${error}`);
+        }
+    });
+    // Register translate markdown command
+    const translateMarkdownCommand = vscode.commands.registerCommand('code-translator.translateMarkdown', async () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            vscode.window.showInformationMessage('No active editor');
+            return;
+        }
+        if (!editor.document.uri.path.endsWith('.md')) {
+            vscode.window.showWarningMessage('Please open a Markdown file');
+            return;
+        }
+        const targetLanguage = vscode.workspace
+            .getConfiguration('code-translator')
+            .get('targetLanguage') || 'en';
+        const sourceLanguage = vscode.workspace
+            .getConfiguration('code-translator')
+            .get('sourceLanguage') || 'auto';
+        vscode.window.showInformationMessage('Translating markdown...');
+        try {
+            await (0, markdown_1.translateMarkdown)(editor, sourceLanguage, targetLanguage);
+            vscode.window.showInformationMessage('Markdown translated successfully');
+        }
+        catch (error) {
+            vscode.window.showErrorMessage(`Failed to translate markdown: ${error}`);
+        }
+    });
     context.subscriptions.push(translateCommand);
     context.subscriptions.push(translateFileCommand);
+    context.subscriptions.push(translateCommentsCommand);
+    context.subscriptions.push(translateMarkdownCommand);
 }
 exports.activate = activate;
 async function performTranslation(text, mode) {

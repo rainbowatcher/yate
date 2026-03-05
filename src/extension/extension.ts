@@ -1,5 +1,7 @@
 import * as vscode from 'vscode'
 import { translateText } from './translator/translate'
+import { translateComments } from './translator/comments'
+import { translateMarkdown } from './translator/markdown'
 
 // Store the translation panel
 let translationPanel: vscode.WebviewPanel | undefined
@@ -59,8 +61,72 @@ export function activate(context: vscode.ExtensionContext) {
     }
   )
 
+  // Register translate comments in file command
+  const translateCommentsCommand = vscode.commands.registerCommand(
+    'code-translator.translateComments',
+    async () => {
+      const editor = vscode.window.activeTextEditor
+      if (!editor) {
+        vscode.window.showInformationMessage('No active editor')
+        return
+      }
+
+      const languageId = editor.document.languageId
+      const targetLanguage = vscode.workspace
+        .getConfiguration('code-translator')
+        .get<string>('targetLanguage') || 'en'
+      const sourceLanguage = vscode.workspace
+        .getConfiguration('code-translator')
+        .get<string>('sourceLanguage') || 'auto'
+
+      vscode.window.showInformationMessage('Translating comments...')
+
+      try {
+        await translateComments(editor, languageId, sourceLanguage, targetLanguage)
+        vscode.window.showInformationMessage('Comments translated successfully')
+      } catch (error) {
+        vscode.window.showErrorMessage(`Failed to translate comments: ${error}`)
+      }
+    }
+  )
+
+  // Register translate markdown command
+  const translateMarkdownCommand = vscode.commands.registerCommand(
+    'code-translator.translateMarkdown',
+    async () => {
+      const editor = vscode.window.activeTextEditor
+      if (!editor) {
+        vscode.window.showInformationMessage('No active editor')
+        return
+      }
+
+      if (!editor.document.uri.path.endsWith('.md')) {
+        vscode.window.showWarningMessage('Please open a Markdown file')
+        return
+      }
+
+      const targetLanguage = vscode.workspace
+        .getConfiguration('code-translator')
+        .get<string>('targetLanguage') || 'en'
+      const sourceLanguage = vscode.workspace
+        .getConfiguration('code-translator')
+        .get<string>('sourceLanguage') || 'auto'
+
+      vscode.window.showInformationMessage('Translating markdown...')
+
+      try {
+        await translateMarkdown(editor, sourceLanguage, targetLanguage)
+        vscode.window.showInformationMessage('Markdown translated successfully')
+      } catch (error) {
+        vscode.window.showErrorMessage(`Failed to translate markdown: ${error}`)
+      }
+    }
+  )
+
   context.subscriptions.push(translateCommand)
   context.subscriptions.push(translateFileCommand)
+  context.subscriptions.push(translateCommentsCommand)
+  context.subscriptions.push(translateMarkdownCommand)
 }
 
 async function performTranslation(text: string, mode: string) {

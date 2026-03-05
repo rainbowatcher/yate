@@ -13,7 +13,9 @@
   ],
   "activationEvents": [
     "onCommand:code-translator.translate",
-    "onCommand:code-translator.translateFile"
+    "onCommand:code-translator.translateFile",
+    "onCommand:code-translator.translateComments",
+    "onCommand:code-translator.translateMarkdown"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -25,31 +27,39 @@
       {
         "command": "code-translator.translateFile",
         "title": "Code Translator: Translate Entire File"
+      },
+      {
+        "command": "code-translator.translateComments",
+        "title": "Code Translator: Translate Comments"
+      },
+      {
+        "command": "code-translator.translateMarkdown",
+        "title": "Code Translator: Translate Markdown"
       }
     ],
-    "configuration": {
-      "title": "Code Translator",
-      "properties": {
-        "code-translator.targetLanguage": {
-          "type": "string",
-          "default": "en",
-          "enum": ["en", "zh-CN", "ja", "ko", "es", "fr", "de", "ru", "pt", "it"],
-          "description": "Target language for translation"
-        },
-        "code-translator.sourceLanguage": {
-          "type": "string",
-          "default": "auto",
-          "description": "Source language (auto for automatic detection)"
-        },
-        "code-translator.apiKey": {
-          "type": "string",
-          "default": "",
-          "description": "Translation API key (optional for some services)"
+          "configuration": {
+        "title": "Code Translator",
+        "properties": {
+          "code-translator.targetLanguage": {
+            "type": "string",
+            "default": "en",
+            "enum": ["en", "zh-CN", "zh-TW", "ja", "ko", "es", "fr", "de", "ru", "pt", "it"],
+            "description": "Target language for translation"
+          },
+          "code-translator.sourceLanguage": {
+            "type": "string",
+            "default": "auto",
+            "description": "Source language (auto for automatic detection)"
+          },
+          "code-translator.apiKey": {
+            "type": "string",
+            "default": "",
+            "description": "Translation API key (optional for some services)"
+          }
         }
       }
-    }
-  },
-  "scripts": {
+    },
+    "scripts": {
     "vscode:prepublish": "pnpm run compile",
     "compile": "tsc -p ./tsconfig.extension.json",
     "watch": "tsc -watch -p ./tsconfig.extension.json",
