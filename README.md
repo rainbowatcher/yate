@@ -118,6 +118,14 @@ pnpm run watch
 
 Then press F5 in VS Code to start debugging.
 
+## Contribution
+
+Please read [CONTRIBUTING.md](./CONTRIBUTING.md) before creating an Issue or Pull Request.
+
+- You must use the repository Issue/PR templates.
+- This rule applies to both human contributors and Agents.
+- Incomplete template content may be rejected and asked to be updated.
+
 ## License
 
 MIT
