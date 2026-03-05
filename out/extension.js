@@ -32,21 +32,21 @@ const markdown_1 = require("./translator/markdown");
 let translationPanel;
 // Language name mapping
 const languageNames = {
-    en: 'English',
+    'en': 'English',
     'zh-CN': 'Chinese (Simplified)',
     'zh-TW': 'Chinese (Traditional)',
-    ja: 'Japanese',
-    ko: 'Korean',
-    es: 'Spanish',
-    fr: 'French',
-    de: 'German',
-    ru: 'Russian',
-    pt: 'Portuguese',
-    it: 'Italian'
+    'ja': 'Japanese',
+    'ko': 'Korean',
+    'es': 'Spanish',
+    'fr': 'French',
+    'de': 'German',
+    'ru': 'Russian',
+    'pt': 'Portuguese',
+    'it': 'Italian',
 };
 function activate(context) {
     // Register translate selection command - shows translation in side panel
-    const translateCommand = vscode.commands.registerCommand('code-translator.translate', async () => {
+    const translateCommand = vscode.commands.registerCommand('yate.translate', async () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
             vscode.window.showInformationMessage('No active editor');
@@ -61,7 +61,7 @@ function activate(context) {
         await performTranslation(text, 'Selection');
     });
     // Register translate entire file command
-    const translateFileCommand = vscode.commands.registerCommand('code-translator.translateFile', async () => {
+    const translateFileCommand = vscode.commands.registerCommand('yate.translateFile', async () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
             vscode.window.showInformationMessage('No active editor');
@@ -72,7 +72,7 @@ function activate(context) {
         await performTranslation(text, 'File');
     });
     // Register translate comments in file command
-    const translateCommentsCommand = vscode.commands.registerCommand('code-translator.translateComments', async () => {
+    const translateCommentsCommand = vscode.commands.registerCommand('yate.translateComments', async () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
             vscode.window.showInformationMessage('No active editor');
@@ -80,10 +80,10 @@ function activate(context) {
         }
         const languageId = editor.document.languageId;
         const targetLanguage = vscode.workspace
-            .getConfiguration('code-translator')
+            .getConfiguration('yate')
             .get('targetLanguage') || 'en';
         const sourceLanguage = vscode.workspace
-            .getConfiguration('code-translator')
+            .getConfiguration('yate')
             .get('sourceLanguage') || 'auto';
         vscode.window.showInformationMessage('Translating comments...');
         try {
@@ -95,7 +95,7 @@ function activate(context) {
         }
     });
     // Register translate markdown command
-    const translateMarkdownCommand = vscode.commands.registerCommand('code-translator.translateMarkdown', async () => {
+    const translateMarkdownCommand = vscode.commands.registerCommand('yate.translateMarkdown', async () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
             vscode.window.showInformationMessage('No active editor');
@@ -106,10 +106,10 @@ function activate(context) {
             return;
         }
         const targetLanguage = vscode.workspace
-            .getConfiguration('code-translator')
+            .getConfiguration('yate')
             .get('targetLanguage') || 'en';
         const sourceLanguage = vscode.workspace
-            .getConfiguration('code-translator')
+            .getConfiguration('yate')
             .get('sourceLanguage') || 'auto';
         vscode.window.showInformationMessage('Translating markdown...');
         try {
@@ -128,10 +128,10 @@ function activate(context) {
 exports.activate = activate;
 async function performTranslation(text, mode) {
     const targetLanguage = vscode.workspace
-        .getConfiguration('code-translator')
+        .getConfiguration('yate')
         .get('targetLanguage') || 'en';
     const sourceLanguage = vscode.workspace
-        .getConfiguration('code-translator')
+        .getConfiguration('yate')
         .get('sourceLanguage') || 'auto';
     // Show loading message
     vscode.window.showInformationMessage('Translating...');
@@ -140,12 +140,12 @@ async function performTranslation(text, mode) {
         const targetLangName = languageNames[targetLanguage] || targetLanguage;
         // Create or show the side panel
         if (!translationPanel) {
-            translationPanel = vscode.window.createWebviewPanel('codeTranslator', `Translation (${targetLangName})`, {
+            translationPanel = vscode.window.createWebviewPanel('yateTranslator', `Translation (${targetLangName})`, {
                 viewColumn: vscode.ViewColumn.Two,
-                preserveFocus: true
+                preserveFocus: true,
             }, {
                 enableScripts: true,
-                retainContextWhenHidden: true
+                retainContextWhenHidden: true,
             });
             // Handle panel close
             translationPanel.onDidDispose(() => {
@@ -168,12 +168,12 @@ async function performTranslation(text, mode) {
 }
 function generateHtml(translated, targetLanguage) {
     // Escape HTML
-    let escapedContent = translated
+    const escapedContent = translated
         .replace(/&/g, '&')
         .replace(/</g, '<')
         .replace(/>/g, '>');
     // Basic markdown-like rendering
-    let contentHtml = escapedContent
+    const contentHtml = escapedContent
         // Headers
         .replace(/^### (.*$)/gim, '<h3>$1</h3>')
         .replace(/^## (.*$)/gim, '<h2>$1</h2>')

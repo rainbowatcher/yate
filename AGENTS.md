@@ -1,10 +1,10 @@
 # AGENTS.md - AI 编码代理指南
 
-本文档为使用 Code Translator 代码库的 AI 编码代理提供指导。
+本文档为使用 yate（yet another translate extension）代码库的 AI 编码代理提供指导。
 
 ## 项目概览
 
-**Code Translator** 主要是一个用于翻译代码注释和 Markdown 文件的 VSCode 扩展。该项目具有双重性质：
+**yate（yet another translate extension）** 主要是一个用于翻译代码注释和 Markdown 文件的 VSCode 扩展。该项目具有双重性质：
 
 - **主要**: 代码翻译的 VSCode 扩展
 - **次要**: Vue 3 web 应用（Vitesse 模板）- 大部分为样板代码/未使用
@@ -82,9 +82,9 @@ pnpm run vscode:prepublish
 
 | 设置项 | 类型 | 默认值 | 描述 |
 |---------|------|---------|-------------|
-| `code-translator.targetLanguage` | string | `en` | 翻译目标语言 |
-| `code-translator.sourceLanguage` | string | `auto` | 源语言（auto 表示自动检测） |
-| `code-translator.apiKey` | string | `""` | 增强服务的可选 API 密钥 |
+| `yate.targetLanguage` | string | `en` | 翻译目标语言 |
+| `yate.sourceLanguage` | string | `auto` | 源语言（auto 表示自动检测） |
+| `yate.apiKey` | string | `""` | 增强服务的可选 API 密钥 |
 
 ### 支持的语言
 

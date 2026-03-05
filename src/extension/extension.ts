@@ -8,23 +8,23 @@ let translationPanel: vscode.WebviewPanel | undefined
 
 // Language name mapping
 const languageNames: Record<string, string> = {
-  en: 'English',
+  'en': 'English',
   'zh-CN': 'Chinese (Simplified)',
   'zh-TW': 'Chinese (Traditional)',
-  ja: 'Japanese',
-  ko: 'Korean',
-  es: 'Spanish',
-  fr: 'French',
-  de: 'German',
-  ru: 'Russian',
-  pt: 'Portuguese',
-  it: 'Italian'
+  'ja': 'Japanese',
+  'ko': 'Korean',
+  'es': 'Spanish',
+  'fr': 'French',
+  'de': 'German',
+  'ru': 'Russian',
+  'pt': 'Portuguese',
+  'it': 'Italian',
 }
 
 export function activate(context: vscode.ExtensionContext) {
   // Register translate selection command - shows translation in side panel
   const translateCommand = vscode.commands.registerCommand(
-    'code-translator.translate',
+    'yate.translate',
     async () => {
       const editor = vscode.window.activeTextEditor
       if (!editor) {
@@ -41,12 +41,12 @@ export function activate(context: vscode.ExtensionContext) {
       }
 
       await performTranslation(text, 'Selection')
-    }
+    },
   )
 
   // Register translate entire file command
   const translateFileCommand = vscode.commands.registerCommand(
-    'code-translator.translateFile',
+    'yate.translateFile',
     async () => {
       const editor = vscode.window.activeTextEditor
       if (!editor) {
@@ -58,12 +58,12 @@ export function activate(context: vscode.ExtensionContext) {
       const text = document.getText()
 
       await performTranslation(text, 'File')
-    }
+    },
   )
 
   // Register translate comments in file command
   const translateCommentsCommand = vscode.commands.registerCommand(
-    'code-translator.translateComments',
+    'yate.translateComments',
     async () => {
       const editor = vscode.window.activeTextEditor
       if (!editor) {
@@ -73,10 +73,10 @@ export function activate(context: vscode.ExtensionContext) {
 
       const languageId = editor.document.languageId
       const targetLanguage = vscode.workspace
-        .getConfiguration('code-translator')
+        .getConfiguration('yate')
         .get<string>('targetLanguage') || 'en'
       const sourceLanguage = vscode.workspace
-        .getConfiguration('code-translator')
+        .getConfiguration('yate')
         .get<string>('sourceLanguage') || 'auto'
 
       vscode.window.showInformationMessage('Translating comments...')
@@ -84,15 +84,16 @@ export function activate(context: vscode.ExtensionContext) {
       try {
         await translateComments(editor, languageId, sourceLanguage, targetLanguage)
         vscode.window.showInformationMessage('Comments translated successfully')
-      } catch (error) {
+      }
+      catch (error) {
         vscode.window.showErrorMessage(`Failed to translate comments: ${error}`)
       }
-    }
+    },
   )
 
   // Register translate markdown command
   const translateMarkdownCommand = vscode.commands.registerCommand(
-    'code-translator.translateMarkdown',
+    'yate.translateMarkdown',
     async () => {
       const editor = vscode.window.activeTextEditor
       if (!editor) {
@@ -106,10 +107,10 @@ export function activate(context: vscode.ExtensionContext) {
       }
 
       const targetLanguage = vscode.workspace
-        .getConfiguration('code-translator')
+        .getConfiguration('yate')
         .get<string>('targetLanguage') || 'en'
       const sourceLanguage = vscode.workspace
-        .getConfiguration('code-translator')
+        .getConfiguration('yate')
         .get<string>('sourceLanguage') || 'auto'
 
       vscode.window.showInformationMessage('Translating markdown...')
@@ -117,10 +118,11 @@ export function activate(context: vscode.ExtensionContext) {
       try {
         await translateMarkdown(editor, sourceLanguage, targetLanguage)
         vscode.window.showInformationMessage('Markdown translated successfully')
-      } catch (error) {
+      }
+      catch (error) {
         vscode.window.showErrorMessage(`Failed to translate markdown: ${error}`)
       }
-    }
+    },
   )
 
   context.subscriptions.push(translateCommand)
@@ -131,10 +133,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 async function performTranslation(text: string, mode: string) {
   const targetLanguage = vscode.workspace
-    .getConfiguration('code-translator')
+    .getConfiguration('yate')
     .get<string>('targetLanguage') || 'en'
   const sourceLanguage = vscode.workspace
-    .getConfiguration('code-translator')
+    .getConfiguration('yate')
     .get<string>('sourceLanguage') || 'auto'
 
   // Show loading message
@@ -147,23 +149,24 @@ async function performTranslation(text: string, mode: string) {
     // Create or show the side panel
     if (!translationPanel) {
       translationPanel = vscode.window.createWebviewPanel(
-        'codeTranslator',
+        'yateTranslator',
         `Translation (${targetLangName})`,
         {
           viewColumn: vscode.ViewColumn.Two,
-          preserveFocus: true
+          preserveFocus: true,
         },
         {
           enableScripts: true,
-          retainContextWhenHidden: true
-        }
+          retainContextWhenHidden: true,
+        },
       )
 
       // Handle panel close
       translationPanel.onDidDispose(() => {
         translationPanel = undefined
       })
-    } else {
+    }
+    else {
       // Update panel title
       translationPanel.title = `Translation (${targetLangName})`
       // Show the panel
@@ -175,22 +178,23 @@ async function performTranslation(text: string, mode: string) {
     translationPanel.webview.html = html
 
     vscode.window.showInformationMessage(
-      `Translation complete: ${mode} → ${targetLangName}`
+      `Translation complete: ${mode} → ${targetLangName}`,
     )
-  } catch (error) {
+  }
+  catch (error) {
     vscode.window.showErrorMessage(`Translation failed: ${error}`)
   }
 }
 
 function generateHtml(translated: string, targetLanguage: string): string {
   // Escape HTML
-  let escapedContent = translated
+  const escapedContent = translated
     .replace(/&/g, '&')
     .replace(/</g, '<')
     .replace(/>/g, '>')
 
   // Basic markdown-like rendering
-  let contentHtml = escapedContent
+  const contentHtml = escapedContent
     // Headers
     .replace(/^### (.*$)/gim, '<h3>$1</h3>')
     .replace(/^## (.*$)/gim, '<h2>$1</h2>')

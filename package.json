@@ -1,65 +1,65 @@
 {
-  "name": "code-translator",
-  "displayName": "Code Translator",
-  "description": "Translate code comments and markdown files directly in VSCode",
+  "publisher": "rainbowatcher",
+  "name": "yate",
+  "displayName": "yate",
   "version": "1.0.0",
-  "publisher": "code-translator",
-  "engines": {
-    "vscode": "^1.75.0"
-  },
+  "description": "Translate code comments and markdown files directly in VSCode",
   "categories": [
     "Other",
     "Programming Languages"
   ],
-  "activationEvents": [
-    "onCommand:code-translator.translate",
-    "onCommand:code-translator.translateFile",
-    "onCommand:code-translator.translateComments",
-    "onCommand:code-translator.translateMarkdown"
-  ],
   "main": "./out/extension.js",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "activationEvents": [
+    "onCommand:yate.translate",
+    "onCommand:yate.translateFile",
+    "onCommand:yate.translateComments",
+    "onCommand:yate.translateMarkdown"
+  ],
   "contributes": {
     "commands": [
       {
-        "command": "code-translator.translate",
-        "title": "Code Translator: Translate Selection"
+        "command": "yate.translate",
+        "title": "yate: Translate Selection"
       },
       {
-        "command": "code-translator.translateFile",
-        "title": "Code Translator: Translate Entire File"
+        "command": "yate.translateFile",
+        "title": "yate: Translate Entire File"
       },
       {
-        "command": "code-translator.translateComments",
-        "title": "Code Translator: Translate Comments"
+        "command": "yate.translateComments",
+        "title": "yate: Translate Comments"
       },
       {
-        "command": "code-translator.translateMarkdown",
-        "title": "Code Translator: Translate Markdown"
+        "command": "yate.translateMarkdown",
+        "title": "yate: Translate Markdown"
       }
     ],
-          "configuration": {
-        "title": "Code Translator",
-        "properties": {
-          "code-translator.targetLanguage": {
-            "type": "string",
-            "default": "en",
-            "enum": ["en", "zh-CN", "zh-TW", "ja", "ko", "es", "fr", "de", "ru", "pt", "it"],
-            "description": "Target language for translation"
-          },
-          "code-translator.sourceLanguage": {
-            "type": "string",
-            "default": "auto",
-            "description": "Source language (auto for automatic detection)"
-          },
-          "code-translator.apiKey": {
-            "type": "string",
-            "default": "",
-            "description": "Translation API key (optional for some services)"
-          }
+    "configuration": {
+      "title": "yate",
+      "properties": {
+        "yate.targetLanguage": {
+          "type": "string",
+          "default": "en",
+          "enum": ["en", "zh-CN", "zh-TW", "ja", "ko", "es", "fr", "de", "ru", "pt", "it"],
+          "description": "Target language for translation"
+        },
+        "yate.sourceLanguage": {
+          "type": "string",
+          "default": "auto",
+          "description": "Source language (auto for automatic detection)"
+        },
+        "yate.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Translation API key (optional for some services)"
         }
       }
-    },
-    "scripts": {
+    }
+  },
+  "scripts": {
     "vscode:prepublish": "pnpm run compile",
     "compile": "tsc -p ./tsconfig.extension.json",
     "watch": "tsc -watch -p ./tsconfig.extension.json",
@@ -71,8 +71,8 @@
     "@types/vscode": "^1.75.0"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^0.25.2",
     "@types/node": "^18.0.0",
-    "typescript": "^4.7.4",
-    "@antfu/eslint-config": "^0.25.2"
+    "typescript": "^4.7.4"
   }
 }

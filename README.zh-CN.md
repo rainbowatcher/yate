@@ -7,7 +7,7 @@
 <br>
 
 <p align='center'>
-<a href="https://marketplace.visualstudio.com/items?itemName=code-translator.code-translator">VSCode 市场</a>
+<a href="https://marketplace.visualstudio.com/items?itemName=yate.yate">VSCode 市场</a>
 </p>
 
 <br>
@@ -24,10 +24,10 @@
 
 1. 打开 VS Code
 2. 进入扩展市场 (Ctrl+Shift+X)
-3. 搜索 "yate" 或 "Code Translator"
+3. 搜索 "yate"
 4. 点击安装
 
-或从 [VSCode 市场](https://marketplace.visualstudio.com/items?itemName=code-translator.code-translator) 安装。
+或从 [VSCode 市场](https://marketplace.visualstudio.com/items?itemName=yate.yate) 安装。
 
 ## 使用方法
 
@@ -35,21 +35,21 @@
 
 1. 选中要翻译的文本
 2. 打开命令面板 (Ctrl+Shift+P)
-3. 输入 "yate: 翻译选中文本" 或 "Code Translator: Translate Selection"
+3. 输入 "yate: Translate Selection"
 4. 选中的文本将被翻译结果替换
 
 ### 翻译所有注释
 
 1. 打开代码文件
 2. 打开命令面板 (Ctrl+Shift+P)
-3. 输入 "yate: 翻译所有注释" 或 "Code Translator: Translate All Comments"
+3. 输入 "yate: Translate Comments"
 4. 文件中的所有注释将被翻译
 
 ### 翻译 Markdown
 
 1. 打开 Markdown 文件
 2. 打开命令面板 (Ctrl+Shift+P)
-3. 输入 "yate: 翻译 Markdown" 或 "Code Translator: Translate Markdown"
+3. 输入 "yate: Translate Markdown"
 4. Markdown 内容将被翻译
 
 ## 配置
@@ -58,9 +58,9 @@
 
 | 设置 | 描述 | 默认值 |
 |---------|-------------|---------|
-| `code-translator.targetLanguage` | 翻译目标语言 | `zh-CN` |
-| `code-translator.sourceLanguage` | 源语言（使用 `auto` 自动检测） | `auto` |
-| `code-translator.apiKey` | 翻译 API 密钥（免费版可选） | `''` |
+| `yate.targetLanguage` | 翻译目标语言 | `zh-CN` |
+| `yate.sourceLanguage` | 源语言（使用 `auto` 自动检测） | `auto` |
+| `yate.apiKey` | 翻译 API 密钥（免费版可选） | `''` |
 
 ### 支持的语言
 

@@ -1,4 +1,4 @@
-# Code Translator
+# yate (yet another translate extension)
 
 <p align='center'>
 A VSCode extension for translating <b>code comments</b> and <b>markdown files</b> directly in your editor.
@@ -7,7 +7,7 @@ A VSCode extension for translating <b>code comments</b> and <b>markdown files</b
 <br>
 
 <p align='center'>
-<a href="https://marketplace.visualstudio.com/items?itemName=code-translator.code-translator">VSCode Marketplace</a>
+<a href="https://marketplace.visualstudio.com/items?itemName=yate.yate">VSCode Marketplace</a>
 </p>
 
 <br>
@@ -24,10 +24,10 @@ A VSCode extension for translating <b>code comments</b> and <b>markdown files</b
 
 1. Open VS Code
 2. Go to Extensions (Ctrl+Shift+X)
-3. Search for "Code Translator"
+3. Search for "yate"
 4. Click Install
 
-Or install from the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=code-translator.code-translator).
+Or install from the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=yate.yate).
 
 ## Usage
 
@@ -35,21 +35,21 @@ Or install from the [VSCode Marketplace](https://marketplace.visualstudio.com/it
 
 1. Select the text you want to translate
 2. Open Command Palette (Ctrl+Shift+P)
-3. Type "Code Translator: Translate Selection"
+3. Type "yate: Translate Selection"
 4. The selected text will be replaced with the translation
 
 ### Translate All Comments
 
 1. Open a code file
 2. Open Command Palette (Ctrl+Shift+P)
-3. Type "Code Translator: Translate All Comments"
+3. Type "yate: Translate Comments"
 4. All comments in the file will be translated
 
 ### Translate Markdown
 
 1. Open a Markdown file
 2. Open Command Palette (Ctrl+Shift+P)
-3. Type "Code Translator: Translate Markdown"
+3. Type "yate: Translate Markdown"
 4. The markdown content will be translated
 
 ## Configuration
@@ -58,9 +58,9 @@ You can configure the extension in VS Code Settings:
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| `code-translator.targetLanguage` | Target language for translation | `en` |
-| `code-translator.sourceLanguage` | Source language (use `auto` for automatic detection) | `auto` |
-| `code-translator.apiKey` | Translation API key (optional for free tier) | `''` |
+| `yate.targetLanguage` | Target language for translation | `en` |
+| `yate.sourceLanguage` | Source language (use `auto` for automatic detection) | `auto` |
+| `yate.apiKey` | Translation API key (optional for free tier) | `''` |
 
 ### Supported Languages
 
