@@ -118,6 +118,14 @@ pnpm run watch
 
 然后在 VS Code 中按 F5 开始调试。
 
+## 贡献指南
+
+在创建 Issue 或 Pull Request 前，请先阅读 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+
+- 必须使用仓库提供的 Issue/PR 模板。
+- 该规则同时适用于人工贡献者与 Agent。
+- 模板未完整填写的提交可能会被要求补充后再继续评审。
+
 ## 许可证
 
 MIT

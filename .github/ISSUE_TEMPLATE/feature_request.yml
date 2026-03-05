@@ -1,0 +1,73 @@
+name: Feature Request
+description: 提交新功能或改进建议
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你的建议！请按模板完整描述需求背景与方案。
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 背景与问题
+      description: 你当前遇到的问题是什么？为什么需要这个功能？
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建议方案
+      description: 描述你期望的行为、交互或实现方向
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 备选方案
+      description: 是否考虑过其他方案？请说明权衡
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: 影响范围
+      description: 说明该需求影响的模块、用户群体和潜在风险
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 验收标准
+      description: 请给出可验证的验收条件
+      placeholder: |
+        - [ ] 条件 1
+        - [ ] 条件 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: agent-context
+    attributes:
+      label: Agent 执行信息
+      description: 请填写分析上下文、约束条件与自检结果；若非 Agent 创建请填写“非 Agent / N/A”
+      placeholder: |
+        - 分析上下文:
+        - 约束条件:
+        - 自检结果（非 Agent 可填 N/A）:
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: 提交确认
+      options:
+        - label: 我已阅读贡献指南并完整填写模板必填项（Agent 创建时同样必须遵守）
+          required: true

@@ -1,0 +1,79 @@
+name: Bug Report
+description: 报告一个问题或缺陷
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈问题！请尽量完整填写以下信息。
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: 问题描述
+      description: 清晰描述实际问题及现象
+      placeholder: 例如：翻译 Markdown 时代码块内容被误翻译
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      description: 逐步说明如何复现该问题
+      placeholder: |
+        1. 打开 xxx 文件
+        2. 执行 xxx 命令
+        3. 观察到 xxx
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期行为
+      description: 你期望发生什么
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境信息
+      description: 请填写关键环境信息
+      placeholder: |
+        - OS:
+        - VS Code:
+        - Extension Version:
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: 影响范围
+      description: 说明影响的功能、用户范围或严重性
+    validations:
+      required: true
+
+  - type: textarea
+    id: agent-context
+    attributes:
+      label: Agent 执行信息
+      description: 请填写分析上下文、自检结果与参考信息；若非 Agent 创建请填写“非 Agent / N/A”
+      placeholder: |
+        - 分析上下文:
+        - 自检结果:
+        - 参考链接/日志（非 Agent 可填 N/A）:
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: 提交确认
+      options:
+        - label: 我已阅读贡献指南并完整填写模板必填项（Agent 创建时同样必须遵守）
+          required: true
